@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	kafkaConn = "192.168.1.8:9092"
+	kafkaConn = "localhost:9092"
 	topic     = "trendyol-example"
 )
 
@@ -36,7 +36,7 @@ func initConsumer() (*consumergroup.ConsumerGroup, error) {
 	config.Offsets.ProcessingTimeout = 10 * time.Second
 
 	// join to consumer group
-	cg, err := consumergroup.JoinConsumerGroup("zgroup", []string{topic}, []string{"192.168.1.8:2181"}, config)
+	cg, err := consumergroup.JoinConsumerGroup("zgroup", []string{topic}, []string{"localhost:2181"}, config)
 	if err != nil {
 		return nil, err
 	}

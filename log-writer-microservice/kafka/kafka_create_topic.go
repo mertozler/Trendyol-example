@@ -1,9 +1,7 @@
 package kafka
 
 import (
-	"fmt"
 	"github.com/Shopify/sarama"
-	"golang.org/x/exp/slices"
 	"log"
 )
 
@@ -16,14 +14,7 @@ func CreateTopic(kafkaConn string, topic string) {
 		log.Fatal("Error while creating cluster admin: ", err.Error())
 	}
 	defer func() { _ = admin.Close() }()
-	cluster, err := sarama.NewConsumer(brokerAddrs, config)
-	if err != nil {
-		panic(err)
-	}
-	topics, _ := cluster.Topics()
-	if slices.Contains(topics, topic) {
-		fmt.Println("Topic is already existing")
-	} else {
+	
 		err = admin.CreateTopic(topic, &sarama.TopicDetail{
 			NumPartitions:     1,
 			ReplicationFactor: 1,
@@ -32,5 +23,5 @@ func CreateTopic(kafkaConn string, topic string) {
 			log.Fatal("Error while creating topic: ", err.Error())
 
 		}
-	}
+	
 }
