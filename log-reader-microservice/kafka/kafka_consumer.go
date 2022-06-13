@@ -2,11 +2,14 @@ package kafka
 
 import (
 	"fmt"
+	"log"
+	"log-reader-trendyol/couchbase"
+	"os"
+	"strconv"
+	"time"
+
 	"github.com/Shopify/sarama"
 	"github.com/wvanbergen/kafka/consumergroup"
-	"log"
-	"os"
-	"time"
 )
 
 const (
@@ -45,6 +48,7 @@ func initConsumer() (*consumergroup.ConsumerGroup, error) {
 }
 
 func consume(cg *consumergroup.ConsumerGroup) {
+	counter := 1
 	for {
 		select {
 		case msg := <-cg.Messages():
@@ -53,7 +57,14 @@ func consume(cg *consumergroup.ConsumerGroup) {
 			if msg.Topic != topic {
 				continue
 			}
-
+			newMessage := couchbase.KafkaMessages{
+				ID: strconv.Itoa(counter),
+				Message: string(msg.Value),
+			}
+			
+			couchbase.CreateDocument(strconv.Itoa(counter), &newMessage)
+			
+			counter = counter + 1
 			fmt.Println("Topic: ", msg.Topic)
 			fmt.Println("Value: ", string(msg.Value))
 

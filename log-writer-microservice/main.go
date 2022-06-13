@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	kafkaConn = "192.168.1.172:9092"
+	kafkaConn = "192.168.52.24:9092"
 	topic     = "trendyol-example"
 )
 
