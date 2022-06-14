@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log-reader-trendyol/kafka"
+	"message-receiver-microservice/internal/kafka"
 )
 
 func main() {

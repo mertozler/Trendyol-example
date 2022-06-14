@@ -3,7 +3,7 @@ package kafka
 import (
 	"fmt"
 	"log"
-	"log-reader-trendyol/couchbase"
+	"message-receiver-microservice/internal/couchbase"
 	"os"
 	"strconv"
 	"time"
