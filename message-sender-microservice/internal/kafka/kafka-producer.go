@@ -4,12 +4,12 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/Shopify/sarama"
-	"log"
+	//"log"
 	"os"
 )
 
 func Producer(topic string, kafkaConn string) {
-	producer, err := initProducer(kafkaConn)
+	producer, err := InitProducer(kafkaConn)
 	if err != nil {
 		fmt.Println("Error producer: ", err.Error())
 		os.Exit(1)
@@ -22,16 +22,16 @@ func Producer(topic string, kafkaConn string) {
 		msg, _ := reader.ReadString('\n')
 
 		// publish without goroutene
-		publish(topic, msg, producer)
+		Publish(topic, msg, producer)
 
 		// publish with go routene
 		// go publish(msg, producer)
 	}
 }
 
-func initProducer(kafkaConn string) (sarama.SyncProducer, error) {
+func InitProducer(kafkaConn string) (sarama.SyncProducer, error) {
 	// setup sarama log to stdout
-	sarama.Logger = log.New(os.Stdout, "", log.Ltime)
+	//sarama.Logger = log.New(os.Stdout, "", log.Ltime)
 
 	// producer config
 	config := sarama.NewConfig()
@@ -48,7 +48,7 @@ func initProducer(kafkaConn string) (sarama.SyncProducer, error) {
 	return prd, err
 }
 
-func publish(topic string, message string, producer sarama.SyncProducer) {
+func Publish(topic string, message string, producer sarama.SyncProducer) error{
 	// publish sync
 	msg := &sarama.ProducerMessage{
 		Topic: topic,
@@ -56,7 +56,7 @@ func publish(topic string, message string, producer sarama.SyncProducer) {
 	}
 	p, o, err := producer.SendMessage(msg)
 	if err != nil {
-		fmt.Println("Error publish: ", err.Error())
+		return err
 	}
 
 	// publish async
@@ -64,4 +64,5 @@ func publish(topic string, message string, producer sarama.SyncProducer) {
 
 	fmt.Println("Partition: ", p)
 	fmt.Println("Offset: ", o)
+	return nil
 }
